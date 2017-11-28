@@ -18,8 +18,7 @@
         <activity
             android:name=".controller.DetailActivity"
             android:label="Rental Detail"
-            android:parentActivityName=".controller.MainActivity">
-        </activity>
+            android:parentActivityName=".controller.MainActivity"></activity>
     </application>
 
 </manifest>

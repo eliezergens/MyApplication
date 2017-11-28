@@ -6,14 +6,12 @@ package com.eliezer.myapplication.model.backend;
 
 public final class DB_ManagerFactory {
 
-    private static  DB_Manager manager = null;
+    private static DB_Manager manager = null;
 
-    public  static DB_Manager getDB_Manager()
-    {
-        if (manager ==null)
-        {
+    public static DB_Manager getDB_Manager() {
+        if (manager == null) {
             manager = new DB_Manager_List();
         }
-        return  manager;
+        return manager;
     }
 }

@@ -20,7 +20,7 @@ public class Property {
     private int carspots;
 
     //constructor
-    public Property(int streetNumber, String streetName, String suburb, String state, String description, Double price, String image, int bedrooms, int bathrooms, int carspots){
+    public Property(int streetNumber, String streetName, String suburb, String state, String description, Double price, String image, int bedrooms, int bathrooms, int carspots) {
 
         this.streetNumber = streetNumber;
         this.streetName = streetName;
@@ -35,14 +35,43 @@ public class Property {
     }
 
     //getters
-    public int getStreetNumber() { return streetNumber; }
-    public String getStreetName() {return streetName; }
-    public String getSuburb() {return suburb; }
-    public String getState() {return state; }
-    public String getDescription() {return description; }
-    public Double getPrice() {return price; }
-    public String getImage() { return image; }
-    public int getBedrooms(){ return bedrooms; }
-    public int getBathrooms(){ return bathrooms; }
-    public int getCarspots(){ return carspots; }
+    public int getStreetNumber() {
+        return streetNumber;
+    }
+
+    public String getStreetName() {
+        return streetName;
+    }
+
+    public String getSuburb() {
+        return suburb;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public int getBedrooms() {
+        return bedrooms;
+    }
+
+    public int getBathrooms() {
+        return bathrooms;
+    }
+
+    public int getCarspots() {
+        return carspots;
+    }
 }

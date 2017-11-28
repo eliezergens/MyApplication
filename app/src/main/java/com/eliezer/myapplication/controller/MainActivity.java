@@ -3,8 +3,9 @@ package com.eliezer.myapplication.controller;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,68 +25,18 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayList<Property> rentalProperties;
+    static AsyncTask<Void, Void, Void> asyncTask = null;
     DB_Manager manager;
+    private ArrayList<Property> rentalProperties;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        manager= DB_ManagerFactory.getDB_Manager();
-        //rentalProperties= manager.getAllProprties().toArrayList();
-        rentalProperties=new ArrayList<Property>();
-        initRentals(rentalProperties);
-
-        //create our new array adapter
-        ArrayAdapter<Property> adapter = new propertyArrayAdapter(this, 0, rentalProperties);
-        //Find list view and bind it with the custom adapter
-        ListView listView = (ListView) findViewById(R.id.customListView);
-        listView.setAdapter(adapter);
-
-        //add event listener so we can handle clicks
-        AdapterView.OnItemClickListener adapterViewListener = new AdapterView.OnItemClickListener() {
-
-            //on click
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                Property property = rentalProperties.get(position);
-
-                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                intent.putExtra("streetNumber", property.getStreetNumber());
-                intent.putExtra("streetName", property.getStreetName());
-                intent.putExtra("suburb", property.getSuburb());
-                intent.putExtra("state", property.getState());
-                intent.putExtra("image", property.getImage());
-                intent.putExtra("price", property.getPrice());
-                intent.putExtra("bedrooms", property.getBedrooms());
-                intent.putExtra("bathrooms", property.getBathrooms());
-                intent.putExtra("carspots", property.getCarspots());
-                intent.putExtra("description", property.getDescription());
-
-                startActivity(intent);
-            }
-        };
-        //set the listener to the list view
-        listView.setOnItemClickListener(adapterViewListener);
-
+        asyncTask = new PropertyAsyncTask().execute();
     }
 
-    protected void initRentals(List<Property> rentalProperties)
-    {
-        //create property elements
-        rentalProperties.add(
-                new Property(10, "Smith Street", "Sydney", "NSW", "A large 3 bedroom apartment right in the heart of Sydney! A rare find, with 3 bedrooms and a secured car park.", 450.00, "property_image_1", 3, 1, 1));
-
-        rentalProperties.add(
-                new Property(66, "King Street", "Sydney", "NSW", "A fully furnished studio apartment overlooking the harbour. Minutes from the CBD and next to transport, this is a perfect set-up for city living.", 320.00, "property_image_2", 1, 1, 1));
-
-        rentalProperties.add(
-                new Property(1, "Liverpool Road", "Liverpool", "NSW", "A standard 3 bedroom house in the suburbs. With room for several cars and right next to shops this is perfect for new families.", 360.00, "property_image_3", 3, 2, 2));
-
-        rentalProperties.add(
-                new Property(567, "Sunny Street", "Gold Coast", "QLD", "Come and see this amazing studio appartment in the heart of the gold coast, featuring stunning waterfront views.", 360.00, "property_image_4" , 1, 1, 1));
-
-    }
     //custom ArrayAdapter
     class propertyArrayAdapter extends ArrayAdapter<Property> {
 
@@ -124,10 +75,10 @@ public class MainActivity extends AppCompatActivity {
 
             //display trimmed excerpt for description
             int descriptionLength = property.getDescription().length();
-            if(descriptionLength >= 100){
+            if (descriptionLength >= 100) {
                 String descriptionTrim = property.getDescription().substring(0, 100) + "...";
                 description.setText(descriptionTrim);
-            }else{
+            } else {
                 description.setText(property.getDescription());
             }
 
@@ -145,4 +96,51 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private class PropertyAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            manager = DB_ManagerFactory.getDB_Manager();
+            manager.initRentals();
+            rentalProperties = (ArrayList<Property>) manager.getAllProprtiesList();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            //create our new array adapter
+            ArrayAdapter<Property> adapter = new propertyArrayAdapter(MainActivity.this, 0, rentalProperties);
+            //Find list view and bind it with the custom adapter
+            ListView listView = (ListView) findViewById(R.id.customListView);
+            listView.setAdapter(adapter);
+
+            //add event listener so we can handle clicks
+            AdapterView.OnItemClickListener adapterViewListener = new AdapterView.OnItemClickListener() {
+
+                //on click
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    Property property = rentalProperties.get(position);
+
+                    Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                    intent.putExtra("streetNumber", property.getStreetNumber());
+                    intent.putExtra("streetName", property.getStreetName());
+                    intent.putExtra("suburb", property.getSuburb());
+                    intent.putExtra("state", property.getState());
+                    intent.putExtra("image", property.getImage());
+                    intent.putExtra("price", property.getPrice());
+                    intent.putExtra("bedrooms", property.getBedrooms());
+                    intent.putExtra("bathrooms", property.getBathrooms());
+                    intent.putExtra("carspots", property.getCarspots());
+                    intent.putExtra("description", property.getDescription());
+
+                    startActivity(intent);
+                }
+            };
+            //set the listener to the list view
+            listView.setOnItemClickListener(adapterViewListener);
+
+        }
+    }
 }
