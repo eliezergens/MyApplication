@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //custom ArrayAdapter
-    class propertyArrayAdapter extends ArrayAdapter<Property> {
+    private class propertyArrayAdapter extends ArrayAdapter<Property> {
 
         private Context context;
         private List<Property> rentalProperties;
